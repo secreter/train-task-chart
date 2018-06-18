@@ -17,13 +17,26 @@ class Chart extends React.Component {
       data,
       title,
       id,              //edit or new
-      match: props.match
+      match: props.match,
+      width:window.innerWidth - 200,
     }
     this.chart = null
   }
 
   componentDidMount () {
+    window.addEventListener("resize", this.updateDimensions);
     this.draw()
+  }
+  updateDimensions=()=>{
+    this.setState({
+      width:window.innerWidth - 200
+    })
+  }
+
+  componentDidUpdate () {
+    // this.chart.destroy()
+    // this.draw()
+    this.chart.changeWidth(this.state.width)
   }
 
   static init = (props) => {
@@ -52,7 +65,7 @@ class Chart extends React.Component {
     this.chart = new G2.Chart({
       container: 'canvas',
       // forceFit: true,
-      width: window.innerWidth - 200,
+      width: this.state.width,
       padding: [80, 80, 80, 100],
       background: {
         fill: '#fff'

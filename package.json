@@ -5,6 +5,7 @@
   "dependencies": {
     "@antv/g2": "^3.1.2",
     "antd": "^3.6.1",
+    "electron-packager": "^12.1.0",
     "lodash": "^4.17.10",
     "lowdb": "^1.0.0",
     "moment": "^2.22.2",
@@ -21,12 +22,14 @@
     "build": "react-app-rewired build",
     "test": "react-app-rewired test --env=jsdom",
     "eject": "react-app-rewired eject",
-    "estart": "electron ."
+    "estart": "electron .",
+    "packager": "electron-packager ./ train-task --platform=win32 --out ./outApp --app-version 1.0.0 --electron-version 2.0.2 --overwrite --icon=./public/favicon.ico"
   },
   "main": "main.js",
   "homepage": ".",
   "DEV": true,
   "devDependencies": {
-    "babel-plugin-import": "^1.7.0"
+    "babel-plugin-import": "^1.7.0",
+    "electron":"^2.0.2"
   }
 }

@@ -19,13 +19,14 @@ db.defaults({tables: []})
 class Add extends React.Component {
   constructor (props) {
     super(props);
-    let {data, title, id, isNew} = Add.init(props)
+    let {data, title, id, isNew,createTime} = Add.init(props)
     this.state = {
       modified: false,                   //is modified
       data,
       editingKey: '',
       title,
       isNew,
+      createTime,
       id,              //edit or new
       match: props.match
     }
@@ -34,13 +35,14 @@ class Add extends React.Component {
   static getDerivedStateFromProps (nextProps, prevState) {
     if (prevState.match.params.id !== nextProps.match.params.id) {
       //url 改变
-      let {data, title, id, isNew} = Add.init(nextProps)
+      let {data, title, id, isNew,createTime} = Add.init(nextProps)
       return {
         ...prevState,
         data,
         title,
         id,
         isNew,
+        createTime,
         modified: false,
         match: nextProps.match
       }
@@ -50,7 +52,7 @@ class Add extends React.Component {
 
   static init = (props) => {
     let {id} = props.match.params
-    let data = [Add.getDefaultRecord()], title = '', isNew = true
+    let data = [Add.getDefaultRecord()], title = '', isNew = true,createTime=''
     if (id) {
       db.read()
       let table = db.get('tables')
@@ -58,21 +60,23 @@ class Add extends React.Component {
         .value()
       data = table.data
       title = table.title
+      createTime = table.createTime
       isNew = false
     }
     id = id || shortid.generate()
-    return {data, title, id, isNew}
+    createTime = createTime || +new Date()
+    return {data, title, id, isNew,createTime}
   }
 
   static getDefaultRecord () {
     return {
       key: +new Date(),
-      trackId: 'k32-1',
+      trackId: 'k12-1',
       trainId: '23454',
-      isDouble: '是',
+      isDouble: '否',
       startTime: moment().format(dateFormat),
       endTime: moment().format(dateFormat),
-      description: 'werer'
+      description: ''
     }
   }
 
@@ -97,7 +101,7 @@ class Add extends React.Component {
       modified: true,
     })
   }
-  handleSaveData = () => {
+  handleSaveData = (cb) => {
     const {data, title, id} = this.state
     if (!title || data.length === 0) {
       return message.warn('标题和数据不能为空！')
@@ -129,10 +133,13 @@ class Add extends React.Component {
     this.setState({
       modified: false
     })
-    return message.success('保存成功！')
+    message.success('保存成功！')
+    return cb&&cb()
   }
   handleDrawChart = () => {
-
+    const {history}=this.props
+    const {id}=this.state
+    history.push(`/chart/${id}`)
   }
 
   render () {
@@ -166,8 +173,8 @@ class Add extends React.Component {
             <Col span={16}>
               <ButtonGroup>
                 <Button type='primary' onClick={this.handleAddData}>添加数据</Button>
-                <Button type='primary' onClick={this.handleDrawChart}>生成图表</Button>
-                <Button type='primary' onClick={this.handleSaveData}>保存</Button>
+                <Button type='primary' onClick={this.handleSaveData.bind(this,this.handleDrawChart)}>生成图表</Button>
+                <Button type='primary' onClick={this.handleSaveData.bind(this,null)}>保存</Button>
               </ButtonGroup>
             </Col>
           </Row>

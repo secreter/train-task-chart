@@ -8,6 +8,7 @@
 
 # production
 /build
+/outApp
 
 # misc
 .DS_Store

@@ -5,6 +5,7 @@ import low from 'lowdb'
 import LocalStorage from 'lowdb/adapters/LocalStorage'
 import {  Link, Prompt } from "react-router-dom";
 import _ from 'lodash'
+import moment from 'moment';
 
 const adapter = new LocalStorage('db')
 const db = low(adapter)
@@ -56,12 +57,9 @@ class List extends React.Component {
       title: '时间',
       dataIndex: 'createTime',
       key: 'createTime',
+      render: time => <span>{moment(time).format('YYYY/MM/DD HH:mm')}</span>
     }, {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
-    }, {
-      title: 'Action',
+      title: '操作',
       key: 'action',
       render: (text, record) => (
         <span>
