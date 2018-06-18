@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import EditTable from './EditTabe';
 import './index.less'
 import { Breadcrumb, Button, Col, Input, message, Row } from 'antd';
@@ -10,6 +11,7 @@ import { Prompt,Link } from "react-router-dom";
 const adapter = new LocalStorage('db')
 const db = low(adapter)
 const ButtonGroup = Button.Group;
+const dateFormat = 'YYYY/MM/DD HH:mm:ss';
 // Set some defaults (required if your JSON file is empty)
 db.defaults({tables: []})
   .write()
@@ -68,8 +70,8 @@ class Add extends React.Component {
       trackId: 'k32-1',
       trainId: '23454',
       isDouble: '是',
-      startTime: '2018-06-12 17:54:51',
-      endTime: '2018-06-12 17:54:51',
+      startTime: moment().format(dateFormat),
+      endTime: moment().format(dateFormat),
       description: 'werer'
     }
   }
@@ -88,9 +90,10 @@ class Add extends React.Component {
   }
   handleAddData = () => {
     const {data} = this.state
+    let defaultRecord=Add.getDefaultRecord()
     this.setState({
-      data: [...data, this.defaultRecord],
-      editingKey: this.defaultRecord.key,
+      data: [...data, defaultRecord],
+      editingKey: defaultRecord.key,
       modified: true,
     })
   }

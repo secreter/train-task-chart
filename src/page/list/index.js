@@ -67,6 +67,7 @@ class List extends React.Component {
         <span>
           <ButtonGroup>
             <Button type={'primary'}><Link to={`/add/${record.id}`}>查看</Link></Button>
+            <Button type={'primary'}><Link to={`/chart/${record.id}`}>图表</Link></Button>
             <Button type={'danger'} onClick={this.handleDelete.bind(this,record)}>删除</Button>
           </ButtonGroup>
     </span>
