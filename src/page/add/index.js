@@ -71,9 +71,9 @@ class Add extends React.Component {
   static getDefaultRecord () {
     return {
       key: +new Date(),
-      trackId: 'k12-1',
-      trainId: '23454',
-      isDouble: '否',
+      trackId: 'k38-1',
+      trainId: '9527',
+      task:1,
       startTime: moment().format(dateFormat),
       endTime: moment().format(dateFormat),
       description: ''
@@ -132,9 +132,11 @@ class Add extends React.Component {
     }
     this.setState({
       modified: false
+    },()=>{
+      message.success('保存成功！')
+      cb&&cb()
     })
-    message.success('保存成功！')
-    return cb&&cb()
+
   }
   handleDrawChart = () => {
     const {history}=this.props
@@ -143,7 +145,7 @@ class Add extends React.Component {
   }
 
   render () {
-    const {isNew, modified, data, editingKey, title} = this.state
+    const {isNew, modified, data, editingKey, title,id} = this.state
     return (
       <div className="container">
         <Prompt
@@ -162,7 +164,6 @@ class Add extends React.Component {
                 <Breadcrumb.Item><Link to={'/list'}>{'<< 返回'}</Link></Breadcrumb.Item>
                 <Breadcrumb.Item>{title}</Breadcrumb.Item>
               </Breadcrumb>
-
           }
         </Row>
         <div className="tool-bar">
@@ -180,7 +181,7 @@ class Add extends React.Component {
           </Row>
 
         </div>
-        <EditTable editingKey={editingKey} data={data} onChange={this.getTableData}>
+        <EditTable key={id} editingKey={editingKey} data={data} onChange={this.getTableData}>
 
         </EditTable>
       </div>

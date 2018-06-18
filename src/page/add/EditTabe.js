@@ -33,8 +33,8 @@ class EditableTable extends React.Component {
         editable: true,
       },
       {
-        title: '是否重组',
-        dataIndex: 'isDouble',
+        title: '任务',
+        dataIndex: 'task',
         width: '10%',
         editable: true,
       },
@@ -176,7 +176,7 @@ class EditableTable extends React.Component {
               case 'endTime':
                 return 'time'
               case 'trackId':
-              case 'isDouble':
+              case 'task':
                 return 'select'
               default:
                 return 'text'

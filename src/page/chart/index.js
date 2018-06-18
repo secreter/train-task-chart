@@ -3,6 +3,7 @@ import G2 from '@antv/g2';
 import './index.less'
 import { Breadcrumb, Button, Col, Row,Icon } from 'antd';
 import low from 'lowdb'
+import {TASK} from '../../config'
 import LocalStorage from 'lowdb/adapters/LocalStorage'
 
 const adapter = new LocalStorage('db')
@@ -55,12 +56,10 @@ class Chart extends React.Component {
   draw = () => {
     const {data} = Chart.init(this.props)
     // G2 对数据源格式的要求，仅仅是 JSON 数组，数组的每个元素是一个标准 JSON 对象。
-    let values = ['非重组', '重组'];
     data.forEach(function (obj) {
       obj.range = [obj.startTime.replace(/\//g, '-'), obj.endTime.replace(/\//g, '-')];
-      obj.status = values[obj.isDouble === '是' ? 1 : 0];
+      obj.status = TASK[obj.task];
     });
-    console.log(data)
     // Step 1: 创建 Chart 对象
     this.chart = new G2.Chart({
       container: 'canvas',
@@ -107,10 +106,10 @@ class Chart extends React.Component {
       .label('description', {
         offset: -10,
         textStyle: {
-          textAlign: 'end', // 文本对齐方向，可取值为： start middle end
-          fill: '#404040', // 文本的颜色
-          fontSize: '12', // 文本大小
-          fontWeight: 'bold', // 文本粗细
+          textAlign: 'end',      // 文本对齐方向，可取值为： start middle end
+          fill: '#404040',       // 文本的颜色
+          fontSize: '12',        // 文本大小
+          fontWeight: 'bold',    // 文本粗细
           rotate: 0,
           textBaseline: 'middle' // 文本基准线，可取 top middle bottom，默认为middle
         },
@@ -119,7 +118,7 @@ class Chart extends React.Component {
       //   stroke: '#000',
       //   lineWidth: 1
       // })
-      .color('status', ['#2FC25B', '#F04864'])
+      .color('status', ['#2FC25B', '#85a5ff','#F04864','#b37feb','#1890ff','#73d13d','#fff566'])
     // Step 4: 渲染图表
     this.chart.render();
   }
