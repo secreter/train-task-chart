@@ -31,6 +31,7 @@ class App extends Component {
         <Layout style={{minHeight: '100vh'}}>
           <Sider
             collapsible
+            width={140}
             collapsed={this.state.collapsed}
             onCollapse={this.onCollapse}
           >
@@ -53,10 +54,6 @@ class App extends Component {
           <Layout>
             {/*{/*</Header>*/}
             <Content style={{margin: '16px 16px'}}>
-              {/*<Breadcrumb style={{ margin: '16px 0' }}>*/}
-              {/*<Breadcrumb.Item>User</Breadcrumb.Item>*/}
-              {/*<Breadcrumb.Item>Bill</Breadcrumb.Item>*/}
-              {/*</Breadcrumb>*/}
               <MainRouter></MainRouter>
             </Content>
             <Footer style={{textAlign: 'center'}}>

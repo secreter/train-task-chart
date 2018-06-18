@@ -12,10 +12,19 @@ class EditableCell extends React.Component {
       case 'time':
         return <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
       case 'select':
-        return <Select placeholder="Please select a country">
-                <Option value="china">China</Option>
-                <Option value="use">U.S.A</Option>
-              </Select>
+        switch (this.props.dataIndex){
+          case 'isDouble':
+            return <Select  placeholder="是否重组">
+              <Option value="是">是</Option>
+              <Option value="否">否</Option>
+            </Select>
+          default:
+            return <Select placeholder="Please select a country">
+              <Option value="china">China</Option>
+              <Option value="use">U.S.A</Option>
+            </Select>
+        }
+
       case 'number':
       return <InputNumber />;
       default:

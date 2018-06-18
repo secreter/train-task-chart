@@ -33,6 +33,12 @@ class EditableTable extends React.Component {
         editable: true,
       },
       {
+        title: '是否重组',
+        dataIndex: 'isDouble',
+        width: '10%',
+        editable: true,
+      },
+      {
         title: '开始时间',
         dataIndex: 'startTime',
         width: '20%',
@@ -53,6 +59,7 @@ class EditableTable extends React.Component {
       {
         title: '操作',
         dataIndex: 'operation',
+        width: '10%',
         render: (text, record) => {
           const editable = this.isEditing(record);
           return (
@@ -82,7 +89,6 @@ class EditableTable extends React.Component {
                   <a onClick={() => this.edit(record.key)} style={{ marginRight: 8 }}> 编辑</a>
                   <a onClick={() => this.remove(record.key)}>删除</a>
                 </span>
-
               )}
             </div>
           );
@@ -170,6 +176,7 @@ class EditableTable extends React.Component {
               case 'endTime':
                 return 'time'
               case 'trackId':
+              case 'isDouble':
                 return 'select'
               default:
                 return 'text'

@@ -1,113 +1,119 @@
 import React from 'react';
 import EditTable from './EditTabe';
 import './index.less'
-import {Row,Col,Input, Button, Icon ,message} from 'antd';
+import { Breadcrumb, Button, Col, Input, message, Row } from 'antd';
 import low from 'lowdb'
-import LocalStorage   from 'lowdb/adapters/LocalStorage'
+import LocalStorage from 'lowdb/adapters/LocalStorage'
 import shortid from 'shortid'
-import _ from 'lodash'
-import {  Link, Prompt } from "react-router-dom";
+import { Prompt,Link } from "react-router-dom";
 
-const adapter = new LocalStorage ('db')
+const adapter = new LocalStorage('db')
 const db = low(adapter)
 const ButtonGroup = Button.Group;
 // Set some defaults (required if your JSON file is empty)
-db.defaults({ tables: []})
+db.defaults({tables: []})
   .write()
 
 class Add extends React.Component {
   constructor (props) {
     super(props);
-    let {data,title,id}=Add.init(props)
+    let {data, title, id, isNew} = Add.init(props)
     this.state = {
-      modified:false,                   //is modified
+      modified: false,                   //is modified
       data,
       editingKey: '',
       title,
+      isNew,
       id,              //edit or new
-      match:props.match
+      match: props.match
     }
   }
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if(prevState.match.params.id!==nextProps.match.params.id){
+
+  static getDerivedStateFromProps (nextProps, prevState) {
+    if (prevState.match.params.id !== nextProps.match.params.id) {
       //url 改变
-      let {data,title,id}=Add.init(nextProps)
+      let {data, title, id, isNew} = Add.init(nextProps)
       return {
         ...prevState,
         data,
         title,
         id,
-        modified:false,
-        match:nextProps.match
+        isNew,
+        modified: false,
+        match: nextProps.match
       }
     }
     return null
   }
-  static init=(props)=>{
-    let {id}=props.match.params
-    let data=[Add.getDefaultRecord()],title=''
-    if(id){
+
+  static init = (props) => {
+    let {id} = props.match.params
+    let data = [Add.getDefaultRecord()], title = '', isNew = true
+    if (id) {
       db.read()
-      let table=db.get('tables')
-        .find({ id})
+      let table = db.get('tables')
+        .find({id})
         .value()
-      data=table.data
-      title=table.title
+      data = table.data
+      title = table.title
+      isNew = false
     }
-    id=id||shortid.generate()
-    return {data,title,id}
+    id = id || shortid.generate()
+    return {data, title, id, isNew}
   }
-  static getDefaultRecord(){
+
+  static getDefaultRecord () {
     return {
       key: +new Date(),
       trackId: 'k32-1',
       trainId: '23454',
+      isDouble: '是',
       startTime: '2018-06-12 17:54:51',
       endTime: '2018-06-12 17:54:51',
       description: 'werer'
     }
   }
-  getTableData=(data)=>{
+
+  getTableData = (data) => {
     this.setState({
       data,
-      modified:true,
+      modified: true,
     })
   }
-  handleInputChange=(name,e)=>{
+  handleInputChange = (name, e) => {
     this.setState({
-      [name]:e.target.value,
-      modified:true,
+      [name]: e.target.value,
+      modified: true,
     })
-    console.log(this.state)
   }
-  handleAddData=()=>{
-    const {data}=this.state
+  handleAddData = () => {
+    const {data} = this.state
     this.setState({
-      data:[...data,this.defaultRecord],
-      editingKey:this.defaultRecord.key,
-      modified:true,
+      data: [...data, this.defaultRecord],
+      editingKey: this.defaultRecord.key,
+      modified: true,
     })
   }
-  handleSaveData=()=>{
-    const {data,title,id}=this.state
-    if(!title||data.length===0){
+  handleSaveData = () => {
+    const {data, title, id} = this.state
+    if (!title || data.length === 0) {
       return message.warn('标题和数据不能为空！')
     }
     db.read()                               //no cache
-    let item=db.get('tables')
-      .find({ id})
+    let item = db.get('tables')
+      .find({id})
       .value()
-    if(item){
+    if (item) {
       //update
       db.get('tables')
-        .find({ id})
+        .find({id})
         .assign({
           id,
           title,
           data
         })
         .write()
-    }else{
+    } else {
       //add
       db.get('tables')
         .push({
@@ -116,15 +122,18 @@ class Add extends React.Component {
           data
         })
         .write()
-      console.log(db.get('tables').value())
     }
+    this.setState({
+      modified: false
+    })
     return message.success('保存成功！')
   }
-  handleDrawChart=()=>{
+  handleDrawChart = () => {
 
   }
+
   render () {
-    const {modified,data,editingKey,title}=this.state
+    const {isNew, modified, data, editingKey, title} = this.state
     return (
       <div className="container">
         <Prompt
@@ -133,10 +142,23 @@ class Add extends React.Component {
             `当前更改还未保存，确认离开吗？`
           }
         />
+        <Row>
+          {
+            isNew ? <Breadcrumb style={{margin: '0px 0'}}>
+                <Breadcrumb.Item>新建表格</Breadcrumb.Item>
+              </Breadcrumb>
+              :
+              <Breadcrumb style={{margin: '0px 0'}}>
+                <Breadcrumb.Item><Link to={'/list'}>{'<< 返回'}</Link></Breadcrumb.Item>
+                <Breadcrumb.Item>{title}</Breadcrumb.Item>
+              </Breadcrumb>
+
+          }
+        </Row>
         <div className="tool-bar">
           <Row gutter={12}>
             <Col span={8}>
-              <Input value={title} onChange={this.handleInputChange.bind(this,'title')} placeholder={'添加标题'}/>
+              <Input value={title} onChange={this.handleInputChange.bind(this, 'title')} placeholder={'添加标题'} />
             </Col>
             <Col span={16}>
               <ButtonGroup>
