@@ -1,6 +1,8 @@
 {
-  "name": "hello-electron",
+  "name": "train-task",
   "version": "0.1.0",
+  "description": "制图软件",
+  "author": "Peng Chaoyang",
   "private": true,
   "dependencies": {
     "@antv/g2": "^3.1.2",
@@ -23,13 +25,37 @@
     "test": "react-app-rewired test --env=jsdom",
     "eject": "react-app-rewired eject",
     "estart": "electron .",
-    "packager": "electron-packager ./ train-task --platform=win32 --out ./outApp --app-version 1.0.0 --electron-version 2.0.2 --overwrite --icon=./public/favicon.ico"
+    "packager": "electron-packager ./ train-task --platform=win32 --out ./outApp --app-version 1.0.0 --electron-version 2.0.2 --overwrite --icon=./public/favicon.ico",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder --win"
   },
   "main": "main.js",
   "homepage": ".",
   "DEV": true,
   "devDependencies": {
     "babel-plugin-import": "^1.7.0",
-    "electron":"^2.0.2"
+    "electron": "^2.0.2",
+    "electron-builder": "^20.15.1"
+  },
+  "build": {
+    "extends": null,
+    "productName": "productName",
+    "compression": "normal",
+    "electronVersion": "1.8.2",
+    "directories": {
+      "output": "./builder_output"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "ico.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true
+    },
+    "extraFiles": [
+      "dll"
+    ]
   }
 }

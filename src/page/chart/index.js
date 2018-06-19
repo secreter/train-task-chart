@@ -22,6 +22,7 @@ class Chart extends React.Component {
       width:window.innerWidth - 200,
     }
     this.chart = null
+    this.origin={}    //当前鼠标下的色块数据
   }
 
   componentDidMount () {
@@ -96,9 +97,12 @@ class Chart extends React.Component {
         // tickCount:20
       }
     });
-    // this.chart.scale('range', {
-    //   tickInterval: 20000
-    // });
+    //自定义模板，自定义tooltip展示
+    this.chart.tooltip({
+      triggerOn:'none',              // 不触发 tooltip，用户通过 chart.showTooltip() 和 chart.hideTooltip() 来控制 tooltip 的显示和隐藏。
+      shared:false,
+      itemTpl: '<li>时间：{startTime} - {endTime}</li>'
+    });
     this.chart.coord().transpose().scale(1, -1);
     // Step 3：创建图形语法，绘制柱状图，由 genre 和 sold 两个属性决定图形位置，genre 映射至 x 轴，sold 映射至 y 轴
     this.chart.interval()
@@ -113,12 +117,34 @@ class Chart extends React.Component {
           rotate: 0,
           textBaseline: 'middle' // 文本基准线，可取 top middle bottom，默认为middle
         },
-      })               //文本映射到图像上
+      })                          //文本映射到图像上
+      .tooltip('startTime*endTime',(a, b) => {                      //自定义tooltip
+        // 返回的参数名对应 itemTpl 中的变量名
+        return this.origin
+      })
       // .style('trackId',{
       //   stroke: '#000',
       //   lineWidth: 1
       // })
       .color('status', ['#2FC25B', '#85a5ff','#F04864','#b37feb','#1890ff','#73d13d','#fff566'])
+    //自定义tooltip,动态改变
+    this.chart.on('interval:mouseenter', (ev)=> {
+      this.origin=ev.data._origin
+      this.chart.showTooltip(ev)
+    });
+    this.chart.on('interval:mouseleave', (ev)=> {
+      // this.origin={
+      //   startTime:''
+      // }
+      this.chart.hideTooltip(ev)
+    });
+    let oldEv={x:0}
+    this.chart.on('interval:mousemove', (ev)=> {
+      if(Math.abs(ev.x-oldEv.x)>2 ){
+        oldEv=ev
+        this.chart.showTooltip(ev)
+      }
+    });
     // Step 4: 渲染图表
     this.chart.render();
   }

@@ -9,6 +9,7 @@
 # production
 /build
 /outApp
+/builder_output
 
 # misc
 .DS_Store

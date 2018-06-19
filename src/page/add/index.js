@@ -71,7 +71,7 @@ class Add extends React.Component {
   static getDefaultRecord () {
     return {
       key: +new Date(),
-      trackId: 'k38-1',
+      trackId: 0,
       trainId: '9527',
       task:1,
       startTime: moment().format(dateFormat),

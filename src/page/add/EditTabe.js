@@ -6,6 +6,7 @@ import EditableCell from './EditableCell'
 import EditableFormRow,{EditableContext} from './EditableRow'
 import { Table, Button,Input,Icon, InputNumber, Popconfirm, Form } from 'antd';
 import './EditTabe.less'
+import {TASK,TRACK} from '../../config';
 import moment from 'moment';
 import _ from 'lodash';
 const dateFormat = 'YYYY/MM/DD HH:mm:ss';
@@ -131,9 +132,25 @@ class EditableTable extends React.Component {
       if (error) {
         return;
       }
+      // console.log(form.getFieldValue('task'))
+      // 居然select 返回的不是标签里的value
       for (let key in row) {
         if (row[key] instanceof moment){
           row[key]=row[key].format(dateFormat)
+        }
+        if(key==='trackId'){
+          for(let i in TRACK){
+            if(TRACK[i]===row[key]){
+              row[key]=i
+            }
+          }
+        }
+        if(key==='task'){
+          for(let i in TASK){
+            if(TASK[i]===row[key]){
+              row[key]=i
+            }
+          }
         }
       }
       const newData = [...this.state.data];

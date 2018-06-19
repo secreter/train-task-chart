@@ -1,6 +1,6 @@
 import React from 'react';
 import './index.less'
-import { Button, Divider, Table } from 'antd';
+import { Button, Modal, Table } from 'antd';
 import low from 'lowdb'
 import LocalStorage from 'lowdb/adapters/LocalStorage'
 import {  Link, Prompt } from "react-router-dom";
@@ -39,13 +39,20 @@ class List extends React.Component {
   handleView = (record) => {
 
   }
+
   handleDelete = (record) => {
-    let tables=db.get('tables')
-      .remove({ id: record.id })
-      .write()
-    this.setState({
-      tables:db.get('tables').value()
-    })
+    Modal.confirm({
+      title: '你确定删除吗？',
+      onOk:()=> {
+        db.get('tables')
+          .remove({ id: record.id })
+          .write()
+        this.setState({
+          tables:db.get('tables').value()
+        })
+      },
+      onCancel() {},
+    });
   }
   getColumns = () => {
     let columns = [{
