@@ -1,18 +1,21 @@
 import React from 'react';
 import moment from 'moment';
 import date_picker_locale from 'antd/lib/date-picker/locale/zh_CN';
-import { LocaleProvider,Select, Input, InputNumber, Popconfirm, Form , DatePicker, TimePicker} from 'antd';
+import { AutoComplete,Select, Input, InputNumber, Popconfirm, Form , DatePicker, TimePicker} from 'antd';
 
 import {EditableContext} from './EditableRow';
 import './EditableCell.less'
-import {TASK,TRACK} from '../../config';
+import {TASK,TRACK,TRAINID} from '../../config';
 
 import './EditableCell.less'
 
 const dateFormat = 'YYYY/MM/DD HH:mm:ss';
 const FormItem = Form.Item;
 const Option = Select.Option;
-
+const filter=(inputValue, option) => {
+  if(option.props.children.indexOf(inputValue)!==-1) return true
+  return false
+}
 class EditableCell extends React.Component {
   state={
     mode:'time'
@@ -27,17 +30,27 @@ class EditableCell extends React.Component {
       case 'select':
         switch (this.props.dataIndex){
           case 'task':
-            return <Select className={'select'}  placeholder="任务">
-              {Object.keys(TASK).map(key=>{
-                return <Option key={key} value={key}>{TASK[key]}</Option>
-              })}
-            </Select>
+            return <AutoComplete
+              className={'select'}
+              dataSource={TASK}
+              placeholder="任务名称"
+              filterOption={filter}
+            />
+          case 'trainId':
+            return <AutoComplete
+              style={{ width: 140 }}
+              className={'select'}
+              dataSource={TRAINID}
+              placeholder="输入车组号"
+              filterOption={filter}
+            />
           default:
-            return <Select className={'select'} placeholder="选择轨道">
-              {Object.keys(TRACK).map(key=>{
-                return <Option key={key} value={key}>{TRACK[key]}</Option>
-              })}
-            </Select>
+            return <AutoComplete
+              className={'select'}
+              dataSource={TRACK}
+              placeholder="轨道名称"
+              filterOption={filter}
+            />
         }
 
       case 'number':
@@ -49,10 +62,6 @@ class EditableCell extends React.Component {
   get cell(){
     const {record,children,dataIndex}=this.props
     switch (dataIndex){
-      case 'task':
-        return TASK[record[dataIndex]]
-      case 'trackId':
-        return TRACK[record[dataIndex]]
       default:
         return children
     }
@@ -86,14 +95,6 @@ class EditableCell extends React.Component {
                         case 'time':
                           return moment(record[dataIndex], dateFormat)
                         case 'select':
-                          switch (dataIndex){
-                            case 'task':
-                              return TASK[record[dataIndex]]
-                            case 'trackId':
-                              return TRACK[record[dataIndex]]
-                            default:
-                              return record[dataIndex]
-                          }
                         default:
                           return record[dataIndex];
                       }

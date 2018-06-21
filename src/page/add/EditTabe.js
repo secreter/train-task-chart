@@ -8,7 +8,7 @@ import { Table, Button,Input,Icon, InputNumber, Popconfirm, Form } from 'antd';
 
 import EditableCell from './EditableCell'
 import EditableFormRow,{EditableContext} from './EditableRow'
-import {TASK,TRACK} from '../../config';
+import {TASK,TRACK,TRAINID} from '../../config';
 
 import './EditTabe.less'
 const dateFormat = 'YYYY/MM/DD HH:mm:ss';
@@ -140,20 +140,7 @@ class EditableTable extends React.Component {
         if (row[key] instanceof moment){
           row[key]=row[key].format(dateFormat)
         }
-        if(key==='trackId'){
-          for(let i in TRACK){
-            if(TRACK[i]===row[key]){
-              row[key]=i
-            }
-          }
-        }
-        if(key==='task'){
-          for(let i in TASK){
-            if(TASK[i]===row[key]){
-              row[key]=i
-            }
-          }
-        }
+
       }
       const newData = [...this.state.data];
       const index = newData.findIndex(item => key === item.key);
@@ -195,6 +182,7 @@ class EditableTable extends React.Component {
               case 'endTime':
                 return 'time'
               case 'trackId':
+              case 'trainId':
               case 'task':
                 return 'select'
               default:

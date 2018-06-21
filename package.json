@@ -1,5 +1,5 @@
 {
-  "name": "train-task",
+  "name": "Ticktack",
   "version": "0.9.0",
   "description": "制图软件",
   "author": "Peng Chaoyang",
@@ -40,7 +40,7 @@
   },
   "build": {
     "extends": null,
-    "productName": "train task",
+    "productName": "Ticktack",
     "compression": "normal",
     "electronVersion": "2.0.2",
     "directories": {
@@ -53,12 +53,14 @@
     ],
     "win": {
       "target": "nsis",
-      "icon": "./build/icon.png"
+      "icon": "./build/favicon.ico"
     },
     "nsis": {
       "oneClick": false,
       "perMachine": true,
-      "allowToChangeInstallationDirectory": true
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "./build/favicon.ico",
+      "uninstallerIcon": "./build/favicon.ico"
     },
     "extraFiles": [
       "dll"

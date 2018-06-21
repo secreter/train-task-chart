@@ -59,8 +59,6 @@ class Chart extends React.Component {
     const {data} = Chart.init(this.props)
     // G2 对数据源格式的要求，仅仅是 JSON 数组，数组的每个元素是一个标准 JSON 对象。
     data.forEach(function (obj) {
-      obj.task=TASK[obj.task]
-      obj.trackId=TRACK[obj.trackId]
       obj.range = [obj.startTime.replace(/\//g, '-'), obj.endTime.replace(/\//g, '-')];
     });
     console.log(data)
@@ -104,13 +102,17 @@ class Chart extends React.Component {
     this.chart.tooltip({
       triggerOn:'none',              // 不触发 tooltip，用户通过 chart.showTooltip() 和 chart.hideTooltip() 来控制 tooltip 的显示和隐藏。
       shared:false,
-      itemTpl: '<li>时间：{startTime} - {endTime}</li>'
+      itemTpl: `<li>
+                    <div>车组号：{trainId}</div>
+                    <div>时间：{startTime} - {endTime}</div>
+                    <div>备注：{description}</div>
+                </li>`
     });
     this.chart.coord().transpose().scale(1, -1);
     // Step 3：创建图形语法，绘制柱状图，由 genre 和 sold 两个属性决定图形位置，genre 映射至 x 轴，sold 映射至 y 轴
     this.chart.interval()
       .position('trackId*range')
-      .label('description', {
+      .label('trainId', {
         offset: -10,
         textStyle: {
           textAlign: 'end',      // 文本对齐方向，可取值为： start middle end
@@ -129,7 +131,7 @@ class Chart extends React.Component {
       //   stroke: '#000',
       //   lineWidth: 1
       // })
-      .color('task', ['#2FC25B', '#85a5ff','#F04864','#b37feb','#1890ff','#73d13d','#fff566'])
+      .color('task', ['#2FC25B', '#85a5ff','#F04864','#b37feb','#1890ff','#73D13D','#fff566','#873800','#722ed1','#262626'])
     //自定义tooltip,动态改变
     this.chart.on('interval:mouseenter', (ev)=> {
       this.origin=ev.data._origin
@@ -159,7 +161,6 @@ class Chart extends React.Component {
   handleBack = () => {
     const {history,match}=this.props
     const {replace,location,go}=history
-    console.log(this.props)
     if(location.search==='?add'){
       //来自新建
       replace('/add/'+match.params.id)
