@@ -1,6 +1,6 @@
 {
   "name": "train-task",
-  "version": "0.1.0",
+  "version": "0.9.0",
   "description": "制图软件",
   "author": "Peng Chaoyang",
   "private": true,
@@ -25,6 +25,7 @@
     "test": "react-app-rewired test --env=jsdom",
     "eject": "react-app-rewired eject",
     "estart": "electron .",
+    "postinstall": "electron-builder install-app-deps",
     "packager": "electron-packager ./ train-task --platform=win32 --out ./outApp --app-version 1.0.0 --electron-version 2.0.2 --overwrite --icon=./public/favicon.ico",
     "pack": "electron-builder --dir",
     "dist": "electron-builder --win"
@@ -39,15 +40,20 @@
   },
   "build": {
     "extends": null,
-    "productName": "productName",
+    "productName": "train task",
     "compression": "normal",
-    "electronVersion": "1.8.2",
+    "electronVersion": "2.0.2",
     "directories": {
       "output": "./builder_output"
     },
+    "files": [
+      "*.js",
+      "build",
+      "node_modules"
+    ],
     "win": {
       "target": "nsis",
-      "icon": "ico.ico"
+      "icon": "./build/icon.png"
     },
     "nsis": {
       "oneClick": false,

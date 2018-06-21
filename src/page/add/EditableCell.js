@@ -1,13 +1,18 @@
 import React from 'react';
-import EditableRow,{EditableContext} from './EditableRow';
-import { LocaleProvider,Select, Input, InputNumber, Popconfirm, Form , DatePicker, TimePicker} from 'antd';
-import './EditableCell.less'
-import date_picker_locale from 'antd/lib/date-picker/locale/zh_CN';
 import moment from 'moment';
+import date_picker_locale from 'antd/lib/date-picker/locale/zh_CN';
+import { LocaleProvider,Select, Input, InputNumber, Popconfirm, Form , DatePicker, TimePicker} from 'antd';
+
+import {EditableContext} from './EditableRow';
+import './EditableCell.less'
 import {TASK,TRACK} from '../../config';
+
+import './EditableCell.less'
+
 const dateFormat = 'YYYY/MM/DD HH:mm:ss';
 const FormItem = Form.Item;
 const Option = Select.Option;
+
 class EditableCell extends React.Component {
   state={
     mode:'time'
@@ -22,13 +27,13 @@ class EditableCell extends React.Component {
       case 'select':
         switch (this.props.dataIndex){
           case 'task':
-            return <Select  placeholder="任务">
+            return <Select className={'select'}  placeholder="任务">
               {Object.keys(TASK).map(key=>{
                 return <Option key={key} value={key}>{TASK[key]}</Option>
               })}
             </Select>
           default:
-            return <Select placeholder="选择轨道">
+            return <Select className={'select'} placeholder="选择轨道">
               {Object.keys(TRACK).map(key=>{
                 return <Option key={key} value={key}>{TRACK[key]}</Option>
               })}

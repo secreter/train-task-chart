@@ -10,14 +10,19 @@ let win;
 let createWindow = () => {
   // 创建浏览器窗口
   win = new BrowserWindow({
-    width: 900,
+    width: 920,
+    minWidth: 920,
     height: 600,
+    minHeight: 600,
     icon:'./build/favicon.ico'
   });
 
   // 加载应用中的index.html文件
   win.loadFile('./build/index.html/');
-
+  // 加载应用的 index.html
+  // win.loadURL('file://' + __dirname + '/build/index.html');
+  // 打开开发者工具
+  // win.webContents.openDevTools()
   // 当win被关闭时，除掉win的引用
   win.on('closed', () => {
     win = null;

@@ -1,14 +1,16 @@
 /**
  * Created by So on 2018/6/7.
  */
+import _ from 'lodash';
 import React from 'react';
+import moment from 'moment';
+import { Table, Button,Input,Icon, InputNumber, Popconfirm, Form } from 'antd';
+
 import EditableCell from './EditableCell'
 import EditableFormRow,{EditableContext} from './EditableRow'
-import { Table, Button,Input,Icon, InputNumber, Popconfirm, Form } from 'antd';
-import './EditTabe.less'
 import {TASK,TRACK} from '../../config';
-import moment from 'moment';
-import _ from 'lodash';
+
+import './EditTabe.less'
 const dateFormat = 'YYYY/MM/DD HH:mm:ss';
 const ButtonGroup = Button.Group;
 
@@ -24,13 +26,13 @@ class EditableTable extends React.Component {
       {
         title: '股道号',
         dataIndex: 'trackId',
-        width: '10%',
+        width: '12%',
         editable: true,
       },
       {
         title: '车组号',
         dataIndex: 'trainId',
-        width: '10%',
+        width: '12%',
         editable: true,
       },
       {
@@ -54,13 +56,13 @@ class EditableTable extends React.Component {
       {
         title: '备注',
         dataIndex: 'description',
-        width: '20%',
+        width: '18%',
         editable: true,
       },
       {
         title: '操作',
         dataIndex: 'operation',
-        width: '10%',
+        width: '8%',
         render: (text, record) => {
           const editable = this.isEditing(record);
           return (

@@ -1,15 +1,16 @@
 import React from 'react';
-import './index.less'
-import { Button, Modal, Table } from 'antd';
-import low from 'lowdb'
-import LocalStorage from 'lowdb/adapters/LocalStorage'
-import {  Link, Prompt } from "react-router-dom";
-import _ from 'lodash'
 import moment from 'moment';
+import low from 'lowdb'
+import { Button, Modal, Table } from 'antd';
+import {  Link, Prompt } from "react-router-dom";
+import LocalStorage from 'lowdb/adapters/LocalStorage'
+
+import './index.less'
 
 const adapter = new LocalStorage('db')
 const db = low(adapter)
 const ButtonGroup = Button.Group;
+
 // Set some defaults (required if your JSON file is empty)
 db.defaults({tables: []})
   .write()
@@ -43,6 +44,8 @@ class List extends React.Component {
   handleDelete = (record) => {
     Modal.confirm({
       title: '你确定删除吗？',
+      okText:'确定',
+      cancelText:'取消',
       onOk:()=> {
         db.get('tables')
           .remove({ id: record.id })
@@ -59,15 +62,18 @@ class List extends React.Component {
       title: '标题',
       dataIndex: 'title',
       key: 'title',
+      width: '40%',
       render: text => <a href="javascript:;">{text}</a>,
     }, {
       title: '时间',
       dataIndex: 'createTime',
       key: 'createTime',
+      width: '30%',
       render: time => <span>{moment(time).format('YYYY/MM/DD HH:mm')}</span>
     }, {
       title: '操作',
       key: 'action',
+      width: '30%',
       render: (text, record) => (
         <span>
           <ButtonGroup>

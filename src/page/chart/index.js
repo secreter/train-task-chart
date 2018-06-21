@@ -1,10 +1,11 @@
 import React from 'react';
 import G2 from '@antv/g2';
-import './index.less'
-import { Breadcrumb, Button, Col, Row,Icon } from 'antd';
 import low from 'lowdb'
-import {TASK} from '../../config'
+import { Breadcrumb, Button, Col, Row,Icon } from 'antd';
+import {TASK,TRACK} from '../../config';
 import LocalStorage from 'lowdb/adapters/LocalStorage'
+
+import './index.less'
 
 const adapter = new LocalStorage('db')
 const db = low(adapter)
@@ -58,9 +59,11 @@ class Chart extends React.Component {
     const {data} = Chart.init(this.props)
     // G2 对数据源格式的要求，仅仅是 JSON 数组，数组的每个元素是一个标准 JSON 对象。
     data.forEach(function (obj) {
+      obj.task=TASK[obj.task]
+      obj.trackId=TRACK[obj.trackId]
       obj.range = [obj.startTime.replace(/\//g, '-'), obj.endTime.replace(/\//g, '-')];
-      obj.status = TASK[obj.task];
     });
+    console.log(data)
     // Step 1: 创建 Chart 对象
     this.chart = new G2.Chart({
       container: 'canvas',
@@ -70,9 +73,9 @@ class Chart extends React.Component {
       background: {
         fill: '#fff'
       },
-      plotBackground: {
-        stroke: '#000', // 图表边框颜色
-      }
+      // plotBackground: {
+      //   stroke: '#000', // 图表边框颜色
+      // }
     });
     //设置图例
     // this.chart.legend({
@@ -126,7 +129,7 @@ class Chart extends React.Component {
       //   stroke: '#000',
       //   lineWidth: 1
       // })
-      .color('status', ['#2FC25B', '#85a5ff','#F04864','#b37feb','#1890ff','#73d13d','#fff566'])
+      .color('task', ['#2FC25B', '#85a5ff','#F04864','#b37feb','#1890ff','#73d13d','#fff566'])
     //自定义tooltip,动态改变
     this.chart.on('interval:mouseenter', (ev)=> {
       this.origin=ev.data._origin
@@ -154,7 +157,15 @@ class Chart extends React.Component {
   }
 
   handleBack = () => {
-    window.history.back()
+    const {history,match}=this.props
+    const {replace,location,go}=history
+    console.log(this.props)
+    if(location.search==='?add'){
+      //来自新建
+      replace('/add/'+match.params.id)
+    }else{
+      replace('/list')
+    }
   }
 
   render () {

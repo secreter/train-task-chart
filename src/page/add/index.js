@@ -1,17 +1,20 @@
 import React from 'react';
 import moment from 'moment';
-import EditTable from './EditTabe';
-import './index.less'
-import { Breadcrumb, Button, Col, Input, message, Row } from 'antd';
 import low from 'lowdb'
-import LocalStorage from 'lowdb/adapters/LocalStorage'
 import shortid from 'shortid'
+import LocalStorage from 'lowdb/adapters/LocalStorage'
 import { Prompt,Link } from "react-router-dom";
+import { Breadcrumb, Button, Col, Input, message, Row } from 'antd';
+
+import EditTable from './EditTabe';
+
+import './index.less'
 
 const adapter = new LocalStorage('db')
 const db = low(adapter)
 const ButtonGroup = Button.Group;
 const dateFormat = 'YYYY/MM/DD HH:mm:ss';
+
 // Set some defaults (required if your JSON file is empty)
 db.defaults({tables: []})
   .write()
@@ -19,11 +22,11 @@ db.defaults({tables: []})
 class Add extends React.Component {
   constructor (props) {
     super(props);
-    let {data, title, id, isNew,createTime} = Add.init(props)
+    let {data, title, id, isNew,createTime,editingKey} = Add.init(props)
     this.state = {
       modified: false,                   //is modified
       data,
-      editingKey: '',
+      editingKey,
       title,
       isNew,
       createTime,
@@ -52,7 +55,7 @@ class Add extends React.Component {
 
   static init = (props) => {
     let {id} = props.match.params
-    let data = [Add.getDefaultRecord()], title = '', isNew = true,createTime=''
+    let data = [Add.getDefaultRecord()], title = '', isNew = true,createTime='',editingKey=''
     if (id) {
       db.read()
       let table = db.get('tables')
@@ -65,7 +68,10 @@ class Add extends React.Component {
     }
     id = id || shortid.generate()
     createTime = createTime || +new Date()
-    return {data, title, id, isNew,createTime}
+    if(isNew){
+      editingKey=data[0].key
+    }
+    return {data, title, id, isNew,createTime,editingKey}
   }
 
   static getDefaultRecord () {
@@ -141,7 +147,7 @@ class Add extends React.Component {
   handleDrawChart = () => {
     const {history}=this.props
     const {id}=this.state
-    history.push(`/chart/${id}`)
+    history.push(`/chart/${id}?add`)
   }
 
   render () {
