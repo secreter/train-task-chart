@@ -132,6 +132,7 @@ class Add extends React.Component {
         .push({
           id,
           title,
+          createTime:new Date(),
           data
         })
         .write()

@@ -1,6 +1,7 @@
 import React from 'react';
 import G2 from '@antv/g2';
 import low from 'lowdb'
+import moment from 'moment'
 import { Breadcrumb, Button, Col, Row,Icon } from 'antd';
 import {TASK,TRACK} from '../../config';
 import LocalStorage from 'lowdb/adapters/LocalStorage'
@@ -57,16 +58,32 @@ class Chart extends React.Component {
 
   draw = () => {
     const {data} = Chart.init(this.props)
+    let min,max,tmp,trackIdSet=new Set()
     // G2 对数据源格式的要求，仅仅是 JSON 数组，数组的每个元素是一个标准 JSON 对象。
     data.forEach(function (obj) {
+      if(!min){
+        min=moment(obj.startTime).valueOf()
+      }else{
+        tmp=moment(obj.startTime).valueOf()
+        min=min<tmp?min:tmp
+      }
+      if(!max){
+        max=moment(obj.startTime).valueOf()
+      }else{
+        tmp=moment(obj.startTime).valueOf()
+        max=max>tmp?max:tmp
+      }
+      trackIdSet.add(obj.trackId)
+      obj.group='all'         //全部一个组，为了减小间距
       obj.range = [obj.startTime.replace(/\//g, '-'), obj.endTime.replace(/\//g, '-')];
     });
-    console.log(data)
+    let num=trackIdSet.size<3?3:trackIdSet.size
     // Step 1: 创建 Chart 对象
     this.chart = new G2.Chart({
       container: 'canvas',
       // forceFit: true,
       width: this.state.width,
+      height:45*num+100,
       padding: [80, 80, 80, 100],
       background: {
         fill: '#fff'
@@ -87,13 +104,16 @@ class Chart extends React.Component {
     //     stroke: 'red'
     //   }
     // });
+    min=moment(min).format('YYYY-MM-DD 00:00:00')
+    max=moment(max+24*60*60*1000).format('YYYY-MM-DD 00:00:00')
     // Step 2: 载入数据源
     this.chart.source(data, {
       range: {
         nice: true,
         type: 'time',
         mask: 'HH:mm:ss',
-        // min:'00:00',
+        min,
+        max,
         tickInterval: 1000 * 3600          //m秒
         // tickCount:20
       }
@@ -127,6 +147,11 @@ class Chart extends React.Component {
         // 返回的参数名对应 itemTpl 中的变量名
         return this.origin
       })
+      // .adjust([{
+      //   type: 'dodge',
+      //   marginRatio: 0.01, // 数值范围为 0 至 1，用于调整分组中各个柱子的间距
+      //   dodgeBy: 'group'
+      // }])
       // .style('trackId',{
       //   stroke: '#000',
       //   lineWidth: 1
