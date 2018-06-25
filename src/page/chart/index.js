@@ -79,6 +79,7 @@ class Chart extends React.Component {
     });
     let num=trackIdSet.size<3?3:trackIdSet.size
     // Step 1: 创建 Chart 对象
+    G2.Global.widthRatio.column=4/5    //调节柱状图宽度和间距
     this.chart = new G2.Chart({
       container: 'canvas',
       // forceFit: true,
