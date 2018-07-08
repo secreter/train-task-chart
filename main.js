@@ -30,7 +30,7 @@ let createWindow = () => {
 
   //设置菜单
   win.setMenu(null)
-  win.setTitle('时间图表绘制')
+  win.setTitle('Ticktack')
 };
 
 // 当app准备就绪时候开启窗口

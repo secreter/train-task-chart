@@ -3,6 +3,7 @@ import { HashRouter, Link } from 'react-router-dom';
 import './App.css';
 import { MainRouter } from "./router/router";
 import { Icon, Layout, Menu } from 'antd';
+// const {shell} = require('electron');
 
 const {Header, Content, Footer, Sider} = Layout;
 const SubMenu = Menu.SubMenu;
@@ -22,6 +23,10 @@ class App extends Component {
         selectedKeys:[key]
       })
     }
+  }
+
+  handleConnectClick=()=>{
+    // shell.openExternal('https://redream.com');
   }
 
   render () {
@@ -56,8 +61,10 @@ class App extends Component {
             <Content style={{margin: '16px 16px'}}>
               <MainRouter></MainRouter>
             </Content>
-            <Footer style={{textAlign: 'center'}}>
-              Ant Design ©2016 Created by Ant UED
+            <Footer style={{textAlign: 'center',color:'#999'}}>
+              Ticktack ©2018 Designed by
+              <a href="mailto:623702617@qq.com" title={'蒋忠良'} style={{color:'#999'}}> JiangZhongLiang</a> &
+              <a href="mailto:so@redream.cn" title={'彭朝阳'} style={{color:'#999'}}> PengChaoYang</a>
             </Footer>
           </Layout>
         </Layout>
