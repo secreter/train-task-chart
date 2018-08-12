@@ -57,7 +57,9 @@ class Chart extends React.Component {
   }
 
   draw = () => {
-    const {data} = Chart.init(this.props)
+    let {data} = Chart.init(this.props)
+    console.log(data)
+
     let min,max,tmp,trackIdSet=new Set()
     // G2 对数据源格式的要求，仅仅是 JSON 数组，数组的每个元素是一个标准 JSON 对象。
     data.forEach(function (obj) {
@@ -77,7 +79,26 @@ class Chart extends React.Component {
       obj.group='all'         //全部一个组，为了减小间距
       obj.range = [obj.startTime.replace(/\//g, '-'), obj.endTime.replace(/\//g, '-')];
     });
-    let num=trackIdSet.size<3?3:trackIdSet.size
+    min=moment(min).format('YYYY-MM-DD 18:00:00')
+    max=moment(max+24*60*60*1000).format('YYYY-MM-DD 18:00:00')
+
+    let placeholders=TRACK.map(trackId=>{
+      return {
+        description:'',
+        endTime:min,
+        group:"all",
+        key:'',
+        range: [min, min],
+        startTim:min,
+        task:"",
+        trackId,
+        trainId:"",
+      }
+    })
+    data=placeholders.concat(data)
+    console.log(data)
+    // let num=trackIdSet.size<3?3:trackIdSet.size
+    let num=TRACK.length
     // Step 1: 创建 Chart 对象
     G2.Global.widthRatio.column=4/5    //调节柱状图宽度和间距
     this.chart = new G2.Chart({
@@ -85,7 +106,8 @@ class Chart extends React.Component {
       // forceFit: true,
       width: this.state.width,
       height:45*num+100,
-      padding: [80, 80, 80, 100],
+      // padding: [80, 80, 80, 100],
+      padding: [40, 80, 80, 80],
       background: {
         fill: '#fff'
       },
@@ -105,14 +127,14 @@ class Chart extends React.Component {
     //     stroke: 'red'
     //   }
     // });
-    min=moment(min).format('YYYY-MM-DD 00:00:00')
-    max=moment(max+24*60*60*1000).format('YYYY-MM-DD 00:00:00')
+
     // Step 2: 载入数据源
     this.chart.source(data, {
       range: {
         nice: true,
         type: 'time',
-        mask: 'HH:mm:ss',
+        // mask: 'HH:mm:ss',
+        mask: 'HH:mm',
         min,
         max,
         tickInterval: 1000 * 3600          //m秒

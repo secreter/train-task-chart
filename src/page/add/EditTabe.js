@@ -11,7 +11,7 @@ import EditableFormRow,{EditableContext} from './EditableRow'
 import {TASK,TRACK,TRAINID} from '../../config';
 
 import './EditTabe.less'
-const dateFormat = 'YYYY/MM/DD HH:mm:ss';
+const dateFormat = 'YYYY/MM/DD HH:mm';
 const ButtonGroup = Button.Group;
 
 

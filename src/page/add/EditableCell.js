@@ -9,7 +9,7 @@ import {TASK,TRACK,TRAINID} from '../../config';
 
 import './EditableCell.less'
 
-const dateFormat = 'YYYY/MM/DD HH:mm:ss';
+const dateFormat = 'YYYY/MM/DD HH:mm';
 const FormItem = Form.Item;
 const Option = Select.Option;
 const filter=(inputValue, option) => {
@@ -20,13 +20,65 @@ class EditableCell extends React.Component {
   state={
     mode:'time'
   }
+  picker=null
+  componentDidMount(){
+    if(!this.picker) return
+    console.log(this.picker.picker.input)
+    this.picker.picker.input.addEventListener('input',(input)=>{
+      console.log()
+    })
+    let inupts=[...document.querySelectorAll('.ant-calendar-input')]
+    console.log(inupts)
+    inupts.forEach(input=>{
+      input.addEventListener('input',(a)=>{
+        console.log(a.target.value);
+        a.target.value=a.target.value.replace('.',':')
+      })
+    })
+
+  }
   handlePanelChange = (value, mode) => {
+    console.log(value)
     this.setState({ mode });
+  }
+  handleTimerChange=(time,timeString)=>{
+
+  }
+  handleDateChange=(time,timeString)=>{
+    console.log(time,timeString)
+  }
+  handleOpenChange=(status)=>{
+    //下拉框出来的时候添加事件监听
+    if(!status)return
+    setTimeout(()=>{
+      let inupts=[...document.querySelectorAll('.ant-calendar-input')]
+      inupts.forEach(input=>{
+        input.addEventListener('keyup',(e)=>{
+          console.log(e.target.value);
+          e.target.value=e.target.value.replace('.',':') //替换.
+          e.target.value=e.target.value.replace(';',':') //替换.
+          e.target.value=e.target.value.replace(/([^0-9])([0-9]:)/,'$10$2')   //替换9=>09
+        })
+      })
+    },0)
   }
   getInput = () => {
     switch(this.props.inputType){
       case 'time':
-        return <DatePicker onPanelChange={this.handlePanelChange} locale={date_picker_locale} mode={this.state.mode} showTime format="YYYY-MM-DD HH:mm:ss" />
+        return <DatePicker
+          ref={ref=>this.picker=ref}
+          onPanelChange={this.handlePanelChange}
+          onChange={this.handleDateChange}
+          onOpenChange={this.handleOpenChange}
+          locale={date_picker_locale}
+          mode={this.state.mode}
+          showTime={
+            {
+              format:"HH:mm",
+              onChange:this.handleTimerChange
+            }
+          }
+          format="YYYY-MM-DD HH:mm" />
       case 'select':
         switch (this.props.dataIndex){
           case 'task':
