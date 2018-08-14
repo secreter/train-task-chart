@@ -53,14 +53,14 @@
     ],
     "win": {
       "target": "nsis",
-      "icon": "./build/favicon.ico"
+      "icon": "./src/assets/favicon.ico"
     },
     "nsis": {
       "oneClick": false,
       "perMachine": true,
       "allowToChangeInstallationDirectory": true,
-      "installerIcon": "./build/favicon.ico",
-      "uninstallerIcon": "./build/favicon.ico"
+      "installerIcon": "./src/assets/favicon.ico",
+      "uninstallerIcon": "./src/assets/favicon.ico"
     },
     "extraFiles": [
       "dll"
