@@ -28,7 +28,7 @@ class EditableCell extends React.Component {
       console.log()
     })
     let inupts=[...document.querySelectorAll('.ant-calendar-input')]
-    console.log(inupts)
+
     inupts.forEach(input=>{
       input.addEventListener('input',(a)=>{
         console.log(a.target.value);
@@ -52,12 +52,20 @@ class EditableCell extends React.Component {
     if(!status)return
     setTimeout(()=>{
       let inupts=[...document.querySelectorAll('.ant-calendar-input')]
+      let btnOks=[...document.querySelectorAll('.ant-calendar-ok-btn')]
+      console.log(inupts)
       inupts.forEach(input=>{
         input.addEventListener('keyup',(e)=>{
           console.log(e.target.value);
-          e.target.value=e.target.value.replace('.',':') //替换.
-          e.target.value=e.target.value.replace(';',':') //替换.
+          e.target.value=e.target.value.replace(/[.,;'"/‘“”’。、，；：]/,':') //替换.
+          e.target.value=e.target.value.replace(/:+/,':') //替换.
           e.target.value=e.target.value.replace(/([^0-9])([0-9]:)/,'$10$2')   //替换9=>09
+          if (e.keyCode === 13) {
+            //回车执行查询
+            btnOks.forEach(btnOk=>{
+              btnOk.click();
+            })
+          }
         })
       })
     },0)
